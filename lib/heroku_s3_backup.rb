@@ -17,7 +17,7 @@ class HerokuS3Backup
       bucket = if options[:bucket]
         options[:bucket]
       else
-        "#{app}-heroku-backups"
+        "#{app}heroku-backups"
       end
       
       # Set path
