@@ -34,7 +34,7 @@ class HerokuS3Backup
         "%Y-%m-%d-%H%M%S"
       end
       
-      name = "#{app}#{Time.now.strftime(timestamp)}.sql"
+      name = "#{app}#{Time.now.strftime(timestamp)}.dump"
 
       db = ENV['DATABASE_URL'].match(/postgres:\/\/([^:]+):([^@]+)@([^\/]+)\/(.+)/)
       system "PGPASSWORD=#{db[2]} pg_dump -Fc -i --username=#{db[1]} --host=#{db[3]} #{db[4]} > tmp/#{name}"
