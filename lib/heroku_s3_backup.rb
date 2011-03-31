@@ -44,10 +44,19 @@ class HerokuS3Backup
 
       backup_path = "tmp/#{name}.gz"
 
+      begin
+        s3_creds = YAML::load_file("#{Rails.root}/config/s3.yml")
+        s3_key = s3_creds[Rails.env]['access_key_id']
+        s3_secret = s3_creds[Rails.env]['secret_access_key']
+      rescue
+        s3_key = ENV['S3_KEY']
+        s3_secret = ENV['S3_SECRET']
+      end
+
       s3 = Fog::Storage.new(
         :provider => 'AWS',
-        :aws_access_key_id => ENV['S3_KEY'],
-        :aws_secret_access_key => ENV['S3_SECRET']
+        :aws_access_key_id => s3_key,
+        :aws_secret_access_key => s3_secret
       )
       s3.get_service
     
