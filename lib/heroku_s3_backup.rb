@@ -21,7 +21,9 @@ class HerokuS3Backup
       end
       
       # Set path
-      path = if options[:path]
+      path = if options[:path] == false
+        false
+      elsif options[:path]
         options[:path]
       else
         "db"
@@ -68,7 +70,8 @@ class HerokuS3Backup
         s3.get_bucket(bucket)
       end
 
-      directory.files.create(:key => "#{path}/#{name}.gz", :body => open(backup_path))
+      key = path ? "#{path}/#{name}.gz" : "#{name}.gz"
+      directory.files.create(:key => key, :body => open(backup_path))
       system "rm #{backup_path}"
       puts "[#{Time.now}] heroku:backup complete"
       
