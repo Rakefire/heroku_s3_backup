@@ -73,6 +73,7 @@ class HerokuS3Backup
 
       if options[:limit]
         limit_size = options[:limit].to_i
+        directory.reload
         backups = directory.files.find_all { |file| file.key.match(/#{path}\/#{app}.*\.sql\.gz/) }
         if backups.size > limit_size
           puts "removing old backups..."
