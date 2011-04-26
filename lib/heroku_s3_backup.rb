@@ -76,7 +76,7 @@ class HerokuS3Backup
         backups = directory.files.find_all { |file| file.key.match(/#{path}\/#{app}.*\.sql\.gz/) }
         if backups.size > limit_size
           puts "removing old backups..."
-          backups.sort { |a, b| b.last_modified <=> a.last_modified }[0..limit_size-1].each { |file| file.destroy }
+          backups.sort { |a, b| b.last_modified <=> a.last_modified }[limit_size..-1].each { |file| file.destroy }
         end
       end
 
