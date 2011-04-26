@@ -71,13 +71,14 @@ class HerokuS3Backup
       directory.files.create(:key => "#{path}/#{name}.gz", :body => open(backup_path))
       system "rm #{backup_path}"
 
+      # Remove old backups
       if options[:limit]
-        limit_size = options[:limit].to_i
-        directory.reload
+        directory = s3.directories.get(bucket)
         backups = directory.files.find_all { |file| file.key.match(/#{path}\/#{app}.*\.sql\.gz/) }
-        if backups.size > limit_size
+        if backups.size > options[:limit]
           puts "removing old backups..."
-          backups.sort { |a, b| b.last_modified <=> a.last_modified }[limit_size..-1].each { |file| file.destroy }
+          backups.sort! { |a, b| b.last_modified <=> a.last_modified }
+          backups[options[:limit]..-1].each { |file| file.destroy }
         end
       end
 
