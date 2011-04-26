@@ -21,9 +21,7 @@ class HerokuS3Backup
       end
       
       # Set path
-      path = if options[:path] == false
-        false
-      elsif options[:path]
+      path = if options[:path]
         options[:path]
       else
         "db"
@@ -70,9 +68,18 @@ class HerokuS3Backup
         s3.get_bucket(bucket)
       end
 
-      key = path ? "#{path}/#{name}.gz" : "#{name}.gz"
-      directory.files.create(:key => key, :body => open(backup_path))
+      directory.files.create(:key => "#{path}/#{name}.gz", :body => open(backup_path))
       system "rm #{backup_path}"
+
+      if options[:limit]
+        limit_size = options[:limit].to_i
+        backups = directory.files.find_all { |file| file.key.match(/#{path}\/#{app}.*\.sql\.gz/) }
+        if backups.size > limit_size
+          puts "removing old backups..."
+          backups.sort { |a, b| b.last_modified <=> a.last_modified }[0..limit_size-1].each { |file| file.destroy }
+        end
+      end
+
       puts "[#{Time.now}] heroku:backup complete"
       
     rescue Exception => e
