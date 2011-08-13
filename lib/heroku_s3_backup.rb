@@ -6,11 +6,12 @@ class HerokuS3Backup
       puts "[#{Time.now}] heroku:backup started"
       
       # Set app
-      app = if options[:name] == false
-      elsif options[:name]
-        options[:name] + "-"
+      if options[:name] == false
+        app = ""
+      elsif options[:name].present?
+        app = options[:name]
       else
-        ENV['APP_NAME'] + "-"
+        app = ENV['APP_NAME']
       end
       
       # Set bucket
