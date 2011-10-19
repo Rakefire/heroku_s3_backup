@@ -8,10 +8,10 @@ Gem::Specification.new do |s|
   s.version = "0.0.6"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["Eric Davis", "Trevor Turk", "Jesse Storimer", "Jack Chu", "Patrick Crowley"]
+  s.authors = ["Eric Davis", "Trevor Turk", "Jesse Storimer", "Jack Chu", "Patrick Crowley", "Sebastien Grosjean"]
   s.date = %q{2011-02-01}
-  s.description = %q{http://trevorturk.com/2010/04/14/automated-heroku-backups/ My fork replaces right_aws/aws-s3 with the fog gem}
-  s.email = %q{patrick@mokolabs.com}
+  s.description = %q{http://trevorturk.com/2010/04/14/automated-heroku-backups/ My fork replaces right_aws/aws-s3 with the fog gem and support Cedar stack}
+  s.email = %q{public@zencocoon.com}
   s.extra_rdoc_files = [
     "LICENSE",
     "README.rdoc"
@@ -26,10 +26,10 @@ Gem::Specification.new do |s|
     "test/helper.rb",
     "test/test_heroku_s3_backup.rb"
   ]
-  s.homepage = %q{http://github.com/kamui/heroku_s3_backup}
+  s.homepage = %q{http://github.com/ZenCocoon/heroku_s3_backup}
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.4.2}
-  s.summary = %q{Gem to backup your database from Heroku to S3. Fork uses the fog gem}
+  s.summary = %q{Gem to backup your database from Heroku to S3. Fork uses the fog gem. Support Cedar stack}
   s.test_files = [
     "test/helper.rb",
     "test/test_heroku_s3_backup.rb"
@@ -41,13 +41,15 @@ Gem::Specification.new do |s|
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_development_dependency(%q<thoughtbot-shoulda>, [">= 0"])
       s.add_runtime_dependency(%q<fog>, [">= 0.4.1"])
+      s.add_runtime_dependency(%q<heroku>, [">= 2.9.0"])
     else
       s.add_dependency(%q<thoughtbot-shoulda>, [">= 0"])
       s.add_dependency(%q<fog>, [">= 0.4.1"])
+      s.add_dependency(%q<heroku>, [">= 2.9.0"])
     end
   else
     s.add_dependency(%q<thoughtbot-shoulda>, [">= 0"])
     s.add_dependency(%q<fog>, [">= 0.4.1"])
+    s.add_dependency(%q<heroku>, [">= 2.9.0"])
   end
 end
-

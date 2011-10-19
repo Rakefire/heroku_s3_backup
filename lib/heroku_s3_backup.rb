@@ -1,10 +1,12 @@
+require 'heroku'
+require 'pgbackups/client'
 require 'fog'
 
 class HerokuS3Backup
   def self.backup(options = {})
     begin
       puts "[#{Time.now}] heroku:backup started"
-      
+
       # Set app
       if options[:name] == false
         app = ""
@@ -13,32 +15,41 @@ class HerokuS3Backup
       else
         app = ENV['APP_NAME']
       end
-      
+
       # Set bucket
       bucket = if options[:bucket]
         options[:bucket]
       else
         "#{app}-heroku-backups"
       end
-      
+
       # Set path
       path = if options[:path]
         options[:path]
       else
         "db"
       end
-      
+
       # Set timestamp
       timestamp = if options[:timestamp]
         options[:timestamp]
       else
         "%Y-%m-%d-%H%M%S"
       end
-      
+
       name = "#{app}-#{Time.now.strftime(timestamp)}.sql"
 
       db = ENV['DATABASE_URL'].match(/postgres:\/\/([^:]+):([^@]+)@([^\/]+)\/(.+)/)
-      system "PGPASSWORD=#{db[2]} pg_dump --format=p --no-owner --no-acl --ignore-version --username=#{db[1]} --host=#{db[3]} #{db[4]} > tmp/#{name}"
+
+      # Create backup using pgbackup and auto expire oldest backup as required
+      puts "creating backup"
+      pgbackup = PGBackups::Client.new(ENV["PGBACKUPS_URL"])
+      pgbackup.create_transfer(ENV['SHARED_DATABASE_URL'], ENV['DATABASE_URL'], nil, 'BACKUP', :expire => true)
+
+      # Save latest backup locally
+      puts "saving last backup locally"
+      url = URI.parse(pgbackup.get_latest_backup['public_url'])
+      File.open("tmp/#{name}", 'w') {|f| f.write(Net::HTTP.get_response(url).body) }
 
       puts "gzipping sql file..."
       `gzip tmp/#{name}`
@@ -60,7 +71,7 @@ class HerokuS3Backup
         :aws_secret_access_key => s3_secret
       )
       s3.get_service
-    
+
       begin
         s3.get_bucket(bucket)
         directory = s3.directories.get(bucket)
@@ -84,7 +95,7 @@ class HerokuS3Backup
       end
 
       puts "[#{Time.now}] heroku:backup complete"
-      
+
     rescue Exception => e
       if ENV['HOPTOAD_KEY']
         require 'toadhopper'
