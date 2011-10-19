@@ -1,16 +1,17 @@
 = heroku_s3_backup
 
 Gem to backup your database from Heroku to S3.
+This fork use Fog and works with the Cedar stack.
 
 == Usage - Rails 3
 
 1. Add this to your Gemfile
-     gem 'heroku_s3_backup', :git => 'git://github.com/jstorimer/heroku_s3_backup.git'
+     gem 'heroku_s3_backup', :git => 'git://github.com/ZenCocoon/heroku_s3_backup.git'
 2. Add your S3 config to Heroku
      heroku config:add S3_KEY="YOUR_ID" S3_SECRET="YOUR_KEY"
 3. Run the HerokuS3Backup.backup method from your console or a cronjob
      task :cron => :environment do
-       HerokuS3Backup.backup
+       HerokuS3Backup.backup(:name => YOUR_APP_NAME)
      end
 
 == Usage - Rails 2
@@ -25,12 +26,12 @@ Gem to backup your database from Heroku to S3.
      task :cron => :environment do
        HerokuS3Backup.backup
      end
-5. Enable the Cron addon in the Heroku console. 
+5. Enable the Cron addon in the Heroku console.
 
 The blog post at http://trevorturk.com/2010/04/14/automated-heroku-backups/ has some more detailed instructions.
 
 == Note on Patches/Pull Requests
- 
+
 * Fork the project.
 * Make your feature addition or bug fix.
 * Add tests for it. This is important so I don't break it in a
