@@ -16,17 +16,7 @@ This fork use Fog and works with the Cedar stack.
 
 == Usage - Rails 2
 
-1. Add the heroku_s3_backup gem to your .gems file for Heroku
-     jstorimer-heroku_s3_backup
-2. Add this to your config/production.rb
-     config.gem 'jstorimer-heroku_s3_backup', :lib => 'heroku_s3_backup'
-3. Add your S3 config to Heroku
-     heroku config:add s3_access_key_id="YOUR_ID" s3_secret_access_key="YOUR_KEY"
-4. Configure the cron task in your Rakefile:
-     task :cron => :environment do
-       HerokuS3Backup.backup
-     end
-5. Enable the Cron addon in the Heroku console.
+You won't need Cedar stack so better check other forks.
 
 The blog post at http://trevorturk.com/2010/04/14/automated-heroku-backups/ has some more detailed instructions.
 
