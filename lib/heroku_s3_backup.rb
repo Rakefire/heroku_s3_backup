@@ -67,6 +67,7 @@ class HerokuS3Backup
         s3_secret = ENV['S3_SECRET']
       end
 
+      puts "login-in to s3..."
       s3 = Fog::Storage.new(
         :provider => 'AWS',
         :aws_access_key_id => s3_key,
@@ -75,14 +76,19 @@ class HerokuS3Backup
       s3.get_service
 
       begin
+        puts "getting bucket: #{bucket}"
         s3.get_bucket(bucket)
         directory = s3.directories.get(bucket)
       rescue Excon::Errors::NotFound
+        puts "creating bucket: #{bucket}"
         directory = s3.directories.create(:key => bucket)
         s3.get_bucket(bucket)
       end
 
+      puts "saving backup to s3..."
       directory.files.create(:key => "#{path}/#{name}.gz", :body => open(backup_path))
+
+      puts "cleaning local backup cache..."
       system "rm #{backup_path}"
 
       # Remove old backups
