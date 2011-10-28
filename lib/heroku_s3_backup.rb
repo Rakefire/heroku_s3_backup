@@ -52,8 +52,6 @@ class HerokuS3Backup
       puts "saving last backup locally"
       url = URI.parse(pgbackup.get_latest_backup['public_url'])
 
-      # Use curl to avoid connection errors
-      # system "curl -o tmp/#{name} #{url}"
       File.open("tmp/#{name}", 'wb') {|f| f.write(Net::HTTP.get_response(url).body) }
 
       puts "gzipping sql file..."
