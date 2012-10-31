@@ -6,12 +6,12 @@
 Gem::Specification.new do |s|
   s.name = %q{heroku_s3_backup}
   s.version = "0.0.7"
-
+  s.platform    = Gem::Platform::RUBY
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Eric Davis", "Trevor Turk", "Jesse Storimer", "Jack Chu", "Patrick Crowley", "Sebastien Grosjean", "Matthew O'Riordan"]
   s.date = %q{2011-02-01}
   s.description = %q{http://trevorturk.com/2010/04/14/automated-heroku-backups/ My fork replaces right_aws/aws-s3 with the fog gem and support Cedar stack}
-  s.email = %q{public@zencocoon.com}
+  s.email = %q{me@mattheworiordan.com}
   s.extra_rdoc_files = [
     "LICENSE",
     "README.rdoc"
