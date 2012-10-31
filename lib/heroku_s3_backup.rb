@@ -53,7 +53,7 @@ class HerokuS3Backup
       puts "saving last backup locally"
       url = URI.parse(pgbackup.get_latest_backup['public_url'])
 
-      File.open("tmp/#{name}", 'wb') {|f| f.write(Net::HTTP.get_response(url).body) }
+      File.open("tmp/psql-#{name}", 'wb') {|f| f.write(Net::HTTP.get_response(url).body) }
 
       puts "gzipping sql file..."
       `gzip tmp/#{name}`
