@@ -1,7 +1,7 @@
 # encoding: utf-8
 #
 require 'heroku'
-require 'pgbackups/client'
+require 'heroku/client/pgbackups' rescue require 'pgbackups/client'
 require 'fog'
 
 class HerokuS3Backup
