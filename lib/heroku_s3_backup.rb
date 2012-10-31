@@ -45,7 +45,8 @@ class HerokuS3Backup
 
       # Create backup using pgbackup and auto expire oldest backup as required
       puts "creating backup"
-      pgbackup = PGBackups::Client.new(ENV["PGBACKUPS_URL"])
+      pg_backups_client = Heroku::Client::Pgbackups rescue PGBackups::Client
+      pgbackup = pg_backups_client.new(ENV["PGBACKUPS_URL"])
       pgbackup.create_transfer(ENV['SHARED_DATABASE_URL'], ENV['DATABASE_URL'], nil, 'BACKUP', :expire => true)
 
       # Save latest backup locally
