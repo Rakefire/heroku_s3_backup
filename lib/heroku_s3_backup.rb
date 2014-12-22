@@ -56,9 +56,9 @@ class HerokuS3Backup
       File.open("tmp/psql-#{name}", 'wb') {|f| f.write(Net::HTTP.get_response(url).body) }
 
       puts "gzipping sql file..."
-      `gzip tmp/#{name}`
+      `gzip tmp/psql-#{name}`
 
-      backup_path = "tmp/#{name}.gz"
+      backup_path = "tmp/psql-#{name}.gz"
 
       begin
         s3_creds = YAML::load_file("#{Rails.root}/config/s3.yml")
